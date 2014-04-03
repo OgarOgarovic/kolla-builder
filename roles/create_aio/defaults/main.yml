@@ -1,0 +1,10 @@
+---
+# defaults file for kolla-config
+
+aio_file_path: "all-in-one"
+is_aio: true
+kolla_ssh_ip: "192.168.122.133"
+kolla_user: "kolla"
+kolla_ssh_key: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/id_kola"
+kolla_python_interpereter: "/home/kolla/kolla/bin/python"
+ansible_args: " ansible_ssh_user={{ kolla_user }} ansible_become=True ansible_private_key_file={{ kolla_ssh_key }} ansible_python_interpreter={{ kolla_python_interpereter }}"

@@ -1,0 +1,6 @@
+---
+# defaults file for kolla-prepare
+node_vg: ubuntu-vg
+node_lv: ubuntu-lv
+globals_file: globals.yml
+is_aio: true

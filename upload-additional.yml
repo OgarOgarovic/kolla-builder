@@ -1,0 +1,12 @@
+- name: Upload source code files to nodes
+  hosts: all
+  user: root
+  tasks:
+  - include_role:
+      name: upload_to_nodes
+    with_items: "{{ additional_uploads }}"
+    vars:
+      source_host_path: "{{ item }}"
+      source_node_path:  "{{ additional_upload_node_path ~ '/' ~ item.split('/')[-1] }}"
+      source_name: "{{ item.split('/')[-1] }}"
+      mode: "{{ additional_upload_mode }}"

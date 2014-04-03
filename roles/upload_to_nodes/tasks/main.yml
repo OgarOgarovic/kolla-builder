@@ -1,0 +1,90 @@
+---
+# tasks file for upload
+- name: Copy globals to deploy node
+  copy:
+    src: kolla-files/{{ globals_file }}
+    dest: /etc/kolla/globals.yml
+    owner: kolla
+    group: kolla
+    mode: '0644'
+- name: Copy all-in-one to deploy node
+  copy:
+    src: kolla-files/all-in-one
+    dest: /home/kolla/all-in-one
+    owner: kolla
+    group: kolla
+    mode: '0644'
+  when: is_aio
+- name: Copy multinode to deploy node
+  copy:
+    src:  "{{ multinode_file_path }}"
+    dest: /home/kolla/multinode
+    owner: kolla
+    group: kolla
+    mode: '0644'
+  when: not is_aio
+
+- name: Replace deploy node IP with localhost
+  replace:
+    path: /home/kolla/multinode
+    after: "# REPLACE_LOCALHOST_START"
+    replace: "localhost  ansible_connection=local"
+    regexp: '^(.+)$'
+    before: "# REPLACE_LOCALHOST_END"
+  when: not is_aio
+
+- name: Replace deploy multinode ssh key path
+  replace:
+    path: /home/kolla/multinode
+    replace: "/home/kolla/.ssh/id_rsa"
+    regexp: "{{ kolla_ssh_key }}"
+  when: not is_aio
+
+- name: Upload ssh key to deploy node
+  copy:
+    src: "{{ kolla_ssh_key }}"
+    dest: "/home/kolla/.ssh/id_rsa"
+    owner: "kolla"
+    group: "kolla"
+    mode: "0600"
+  when: not is_aio
+
+- name: Ensure kolla venv is sourced on login
+  lineinfile:
+    path: /home/kolla/.bashrc
+    line: "source kolla/bin/activate"
+    state: present
+
+- name: Set KOLLA_INVENTORY to multinode
+  lineinfile:
+    path: /home/kolla/.bashrc
+    line: "export KOLLA_INVENTORY=multinode"
+    state: present
+  when: not is_aio
+
+- name: Create temporary directory for archives
+  tempfile:
+    state: directory
+    suffix: upload
+  register: temp_archives
+  delegate_to: localhost
+- name: "Create archive for {{ source_name }} source code"
+  archive:
+    path: "{{ source_host_path }}/*"
+    dest: "{{ temp_archives.path }}/upload.tgz"
+  delegate_to: localhost
+- name: "Ensure that the {{ source_node_path }} directory exists on node"
+  file:
+    path: "{{ source_node_path }}"
+    state: "directory"
+    owner: "{{ kolla_user }}"
+    group: "{{ kolla_group }}"
+    mode: "{{ mode }}"
+
+- name: Extract archive on deploy node
+  unarchive:
+    src: "{{ temp_archives.path }}/upload.tgz"
+    dest: "{{ source_node_path }}"
+    owner: "{{ kolla_user }}"
+    group: "{{ kolla_group }}"
+    mode: "{{ mode }}"

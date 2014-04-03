@@ -1,0 +1,10 @@
+---
+# tasks file for kolla-config
+- include_role:
+    name: create_vm
+
+- name: Template all in one file
+  template:
+    src: all-in-one.j2
+    dest: "{{ aio_file_path }}"
+  when: is_aio

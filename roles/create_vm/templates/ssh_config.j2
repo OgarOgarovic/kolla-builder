@@ -1,0 +1,8 @@
+Host {{ name }}
+    User {{ kolla_user }}
+    Hostname {{ current_ip }}
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "{{ kolla_ssh_key }}"
+    IdentitiesOnly yes

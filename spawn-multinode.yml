@@ -1,0 +1,8 @@
+
+---
+- name: Deploy Kolla Nodes
+  hosts: all
+  user: root
+
+  roles:
+    - create_multinode

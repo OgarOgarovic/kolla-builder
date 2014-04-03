@@ -1,0 +1,14 @@
+
+- name: Create node {{ node.name }}
+  include_role:
+    name: create_vm
+  vars:
+    name: "{{ node.name }}"
+    ram_size: "{{ ( node.ram_size | default( default_ram) ) | int }}"
+    cpu_count: "{{ ( node.cpu_count | default( default_cpu ) ) | int }}"
+    disk_size: "{{ ( node.disk_size | default( default_disksize ) ) | int }}"
+- name: Register ip address for node
+  set_fact:
+    node_ips: "{{ node_ips | default ({}) | combine({node.name : current_ip} ) }}"
+- debug:
+    msg: "{{ node_ips }}"

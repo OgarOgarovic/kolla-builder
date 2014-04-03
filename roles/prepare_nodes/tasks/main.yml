@@ -1,0 +1,12 @@
+---
+# tasks file for kolla-prepare
+- name: Resize  LVM to 100%
+  lvol:
+    vg: "{{ node_vg }}"
+    lv: "{{ node_lv }}"
+    size: 100%PVS
+    resizefs: true
+- name: Set propper hostname
+  hostname:
+    name: "{{ kolla_hostname }}"
+  when: not is_aio

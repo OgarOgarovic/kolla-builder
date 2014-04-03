@@ -1,0 +1,19 @@
+---
+# tasks file for create_multinode
+- name: Generate VM list to delete
+  template:
+    src: vm_list.yml.j2
+    dest: "{{ vm_list_path }}"
+
+- name: Create nodes
+  include_tasks: create.yml
+  with_items: "{{ nodes }}"
+  vars:
+    node: "{{ item }}"
+- name: Generate multinode inventory
+  template:
+    src: multinode.j2
+    dest: "{{ multinode_file_path }}"
+
+
+

@@ -1,0 +1,69 @@
+# defaults file for multinode Openstack
+
+# Directory where the disk images will be located
+# default is the libvirt image pool
+# make sure you have enough disk space on the partition
+# if not then change to something on your /home
+image_pool: "/var/cache/libvirt"
+# Path to the base node image
+image_path: "{{image_pool}}/kolla-image.qcow2"
+# Network interfaces
+
+# 192.168.122.0/24
+# could also be the "default" network that libvirt created
+
+network_ssh: "nat1"
+# 192.168.123.0/24
+network_openstack: "nat2"
+# 192.168.100.0/24
+network_neutron: "nat3"
+
+# Whether this setup is for all-in-one deployment
+# keep `true` for aio
+is_aio: true
+
+
+# Absolute path to the ssh key
+# TODO: figure out how to do this without using absolute path
+# Either copy key from ssh/id_kolla to your .ssh directory
+# or modify this config to point to ssh/id_kolla
+kolla_ssh_key: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/id_kolla"
+
+# Add nodes to your ssh config
+# this way you can easily ssh into nodes by
+# ssh <node-name>
+# Warning, this edits your ssh config
+# off by default
+edit_ssh_config: false
+# your ssh config location
+ssh_config: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/config"
+
+# globals file (located in kolla-files) subdirectory
+# this is usefull if you have several deployment scenarios
+# i.e. you develop on multiple branches at once
+globals_file: globals.yml
+
+# Path to kolla-ansible source code
+kolla_source_host_path: "../kolla-ansible"
+
+# Name of the node
+name: "openstack-aio"
+# # Recommended resources for the node
+ram_size: 10000
+# use max available cpus
+cpu_count: 12
+disk_size: 50
+
+# Experimental:  manual configuration of mac addresses
+mac_addresses: {}
+
+## Experimental: Additional Uploads, such as mounted source codes
+## This is an experimental feature, works only for aio deployment for now
+
+# Additional uploads path on nodes
+additional_upload_node_path: "/home/kolla"
+# Mode (recommended to be 0777 if you plan to mount it to containers using `default_extra_mounts`)
+additional_upload_mode: "0777"
+# List of additional directories to upload
+# They will be uploaded on all nodes
+additional_uploads: []

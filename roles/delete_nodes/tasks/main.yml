@@ -1,0 +1,25 @@
+---
+# tasks file for delete_vm
+- name: "Destroying VMs"
+  community.libvirt.virt:
+    name: "{{ item }}"
+    state: "destroyed"
+    force: true
+  loop: "{{ vms_to_delete }}"
+- name: "Undefining VMs"
+  shell: |
+    virsh undefine --domain {{ item }}
+  loop: "{{ vms_to_delete }}"
+- name: "Deleting diskimages"
+  file:
+    path: "{{image_pool ~'/'~ item}}.qcow2"
+    state: absent
+  loop: "{{ vms_to_delete }}"
+
+- name: Deleting SSH config entries
+  blockinfile:
+    path: "{{ ssh_config }}"
+    marker: "# {mark} {{ item | upper }}"
+    state: absent
+  loop: "{{ vms_to_delete }}"
+  when: edit_ssh_config

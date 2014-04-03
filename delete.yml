@@ -1,0 +1,7 @@
+---
+- name: Delete Kolla Nodes
+  hosts: all
+  user: root
+
+  roles:
+    - delete_nodes

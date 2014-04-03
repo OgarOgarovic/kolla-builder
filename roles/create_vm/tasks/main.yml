@@ -1,0 +1,53 @@
+
+
+- name: Auto-generate new MAC addresses for the interfaces
+  set_fact:
+    network_ssh_mac: "{{ '52:54:00' | random_mac }}"
+    network_openstack_mac: "{{ '52:54:00' | random_mac }}"
+    network_neutron_mac: "{{ '52:54:00' | random_mac }}"
+  when: not mac_addresses
+- name: Set manual MAC addreses for the interfaces
+  set_fact:
+    network_ssh_mac: "{{ mac_addresses.network_ssh }}"
+    network_openstack_mac: "{{ mac_addresses.network_openstack }}"
+    network_neutron_mac: "{{ mac_addresses.network_neutron }}"
+  when: mac_addresses
+
+- name: Copy disk Image
+  copy:
+    src: "{{ image_path }}"
+    dest: "{{ disk_path }}"
+
+- name: Resize disk Image to coreect size
+  shell: |
+    qemu-img resize {{ disk_path }} {{ disk_size }}G
+- debug:
+    msg: |
+      {{ lookup('template', 'kolla-node.xml.j2') }}
+- name: Define a VM
+  community.libvirt.virt:
+    command: define
+    xml: "{{ lookup('template', 'kolla-node.xml.j2') }}"
+
+- name: Start a VM
+  community.libvirt.virt:
+    name: "{{name}}"
+    state: running
+
+- name: Try to get node SSH IP
+  include_role:
+    name: get_ip
+  vars:
+    interface: "{{ network_ssh }}"
+    mac: "{{ network_ssh_mac }}"
+    machine_name: "{{ name }}"
+
+- name: Add machine to SSH config
+  blockinfile:
+    marker: "# {mark} {{ name | upper }}"
+    path: "{{ ssh_config }}"
+    block: "{{ lookup('template', 'ssh_config.j2' )}}"
+  when: edit_ssh_config
+- debug:
+    msg: "{{ current_ip }}"
+
