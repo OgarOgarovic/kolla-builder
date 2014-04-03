@@ -7,6 +7,7 @@
     owner: kolla
     group: kolla
     mode: '0644'
+
 - name: Copy all-in-one to deploy node
   copy:
     src: kolla-files/all-in-one
@@ -68,6 +69,8 @@
     suffix: upload
   register: temp_archives
   delegate_to: localhost
+- debug:
+    msg: "{{ source_host_path }}"
 - name: "Create archive for {{ source_name }} source code"
   archive:
     path: "{{ source_host_path }}/*"

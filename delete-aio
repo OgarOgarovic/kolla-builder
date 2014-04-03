@@ -1,0 +1,2 @@
+#!/bin/bash
+ansible-playbook -i local delete.yml -e @$1

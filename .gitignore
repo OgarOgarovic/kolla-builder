@@ -2,3 +2,6 @@ all-in-one
 multinode
 vm_list.yml
 !kolla-files/all-in-one
+user/*
+kolla-files/user-globals/*
+clouds.yaml

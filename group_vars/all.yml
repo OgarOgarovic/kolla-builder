@@ -44,4 +44,7 @@ additional_upload_node_path: "/home/kolla"
 additional_upload_mode: "0777"
 # List of additional directories to upload
 # They will be uploaded on all nodes
+git_patch_kolla: false
+git_branch: master
+git_patches: []
 additional_uploads: []

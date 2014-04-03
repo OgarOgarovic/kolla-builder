@@ -1,0 +1,29 @@
+---
+- name: Create temporary directory for archives
+  tempfile:
+    state: directory
+    suffix: upload
+  register: temp_archives
+  delegate_to: localhost
+- debug:
+    msg: "{{ source_host_path }}"
+- name: "Create archive for {{ source_name }} source code"
+  archive:
+    path: "{{ source_host_path }}/*"
+    dest: "{{ temp_archives.path }}/upload.tgz"
+  delegate_to: localhost
+- name: "Ensure that the {{ source_node_path }} directory exists on node"
+  file:
+    path: "{{ source_node_path }}"
+    state: "directory"
+    owner: "{{ kolla_user }}"
+    group: "{{ kolla_group }}"
+    mode: "{{ mode }}"
+
+- name: Extract archive on deploy node
+  unarchive:
+    src: "{{ temp_archives.path }}/upload.tgz"
+    dest: "{{ source_node_path }}"
+    owner: "{{ kolla_user }}"
+    group: "{{ kolla_group }}"
+    mode: "{{ mode }}"

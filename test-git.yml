@@ -1,0 +1,7 @@
+---
+- name: Test git
+  hosts: all
+  user: root
+
+  roles:
+    - git_patch

@@ -1,0 +1,12 @@
+- name: Upload files to deploy node
+  hosts: all
+  user: root
+  vars:
+    ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+  roles:
+  - name: "upload_archive"
+    vars:
+      source_host_path: "{{ kolla_source_host_path }}"
+      source_node_path: "/home/ubuntu/kolla-ansible"
+      kolla_user: "ubuntu"
+      kolla_group: "ubuntu"

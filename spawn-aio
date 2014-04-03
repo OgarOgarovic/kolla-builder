@@ -1,0 +1,3 @@
+#!/bin/bash
+set -euox pipefail
+ansible-playbook -i local spawn-aio.yml -e @$1
