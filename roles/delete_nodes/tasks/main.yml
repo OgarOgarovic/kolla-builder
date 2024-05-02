@@ -17,6 +17,7 @@
   loop: "{{ vms_to_delete }}"
 
 - name: Deleting SSH config entries
+  delegate_to: localhost
   blockinfile:
     path: "{{ ssh_config }}"
     marker: "# {mark} {{ item | upper }}"

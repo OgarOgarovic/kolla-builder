@@ -1,5 +1,11 @@
 # These initial groups are the only groups required to be modified. The
 # additional groups are for more control of the environment.
+{% if is_remote %}
+[all:vars]
+ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q {{ remote_username }}@{{ remote_ip }}"'
+[proxy]
+{{ remote_ip }} {{ proxy_ansible_args }}
+{% endif %}
 [control]
 # These hostname must be resolvable from your deployment host
 {% for node in nodes %}

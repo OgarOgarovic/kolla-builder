@@ -6,3 +6,6 @@ Host {{ name }}
     ServerAliveInterval 30
     IdentityFile "{{ kolla_ssh_key }}"
     IdentitiesOnly yes
+    {% if is_remote %}
+    ProxyJump kolla-proxy-jump
+    {% endif %}

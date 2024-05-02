@@ -1,0 +1,24 @@
+---
+- name: Create temporary directory for git repository
+  tempfile:
+    state: directory
+    suffix: git_patch
+  register: temp_git
+
+- name: Copy git repository to the temporary directory
+  shell: "cp -r {{ git_repository }} {{ temp_git.path }}"
+- name: Set the name of the repo
+  set_fact:
+    patched_git_repo: "{{ temp_git.path }}/{{ git_repository | basename }}"
+- name: "Checkout the top branch"
+  shell:
+    cmd: |
+      git checkout {{ git_branch }}
+      git commit -a --amend --no-edit
+    chdir: "{{ patched_git_repo }}"
+- name: "Rebase patches"
+  shell:
+    cmd: |
+      git rebase {{ item }}
+    chdir: "{{ patched_git_repo }}"
+  with_items: "{{ git_patches }}"

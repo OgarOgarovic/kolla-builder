@@ -1,0 +1,7 @@
+---
+# defaults file for merge-patches
+# git_repository: "{{ kolla_source_host_path }}"
+git_repository: "../upstream/kolla-ansible"
+git_branch: "mariadb-proxysql-tls"
+git_patches:
+- "service-cert-copy-patch"

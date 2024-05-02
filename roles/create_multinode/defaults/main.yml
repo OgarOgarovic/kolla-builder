@@ -12,5 +12,8 @@ default_ram: 1024
 # Default RAM for each node
 # Minimal 25GB to boot the image
 default_disksize: 25
-
+is_remote: false
+proxy_server_private_key: "lookup('ansible.builtin.env','HOME')}}/.ssh/id_rsa"
+proxy_ansible_args: "ansible_ssh_user=ubuntu ansible_become=True ansible_private_key_file={{ proxy_server_private_key}}"
+remote_username: ubuntu
 nodes: []

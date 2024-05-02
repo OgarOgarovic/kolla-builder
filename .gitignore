@@ -5,3 +5,4 @@ vm_list.yml
 user/*
 kolla-files/user-globals/*
 clouds.yaml
+!kolla-files/all-in-one

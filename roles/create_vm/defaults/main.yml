@@ -2,8 +2,10 @@
 # defaults file for common
 name: "kolla-node"
 image_pool: "{{ lookup('ansible.builtin.env','HOME')}}/pool"
+remote_image_pool: "{{ image_pool }}"
 image_path: "{{image_pool}}/kolla-image.qcow2"
-disk_path: "{{image_pool ~ '/' ~ name }}.qcow2"
+remote_image_path: "{{remote_image_pool}}/kolla-image.qcow2"
+disk_path: "{{ remote_image_pool if is_remote else image_pool  ~ '/' ~ name }}.qcow2"
 
 ram_size: 8192
 cpu_count: 12
@@ -16,3 +18,4 @@ generate_mac_addresses: false
 mac_addresses: []
 ssh_config: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/config"
 edit_ssh_config: false
+is_remote: false
