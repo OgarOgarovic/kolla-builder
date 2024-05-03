@@ -4,33 +4,41 @@ This repository contains a set of Ansible playbooks that will spawn and configur
 
 ## Prerequisites
 
-- Ansible
 - Libvirt
-- virt-manager
+- Virt-manager (optional)
 - [Kolla image](#) - TODO: Upload the Kolla image somewhere
 - 3 NAT networks - [Guide](https://gulraezgulshan.medium.com/virtual-networking-in-linux-b1abcb983e72)
-    - **nat1:** `192.168.122.0/24` for SSH and Ansible
-    - **nat2:** `192.168.123.0/24` for OpenStack management network
-    - **nat3:** `192.168.100.0/24` for Neutron networking
+  - **nat1:** `192.168.122.0/24` for SSH and Ansible
+  - **nat2:** `192.168.123.0/24` for OpenStack management network
+  - **nat3:** `192.168.100.0/24` for Neutron networking
+  ```bash
+  virsh net-create libvirt/nat1.xml
+  virsh net-create libvirt/nat2.xml
+  virsh net-create libvirt/nat3.xml
+  ```
+- Ansible
+  ```bash
+  pip install ansible
+  ```
 - [Kolla Ansible source code](https://github.com/openstack/kolla-ansible)
-- Copy SSH key `ssh/id_kolla` to your `.ssh` directory
-
-```bash
-cp ssh/id_kolla ~/.ssh
-```
-
+  ```bash
+  git clone https://opendev.org/openstack/kolla-ansible.git
+  ```
+- Copy SSH key from `ssh/id_kolla` to your `~/.ssh` directory
+  ```bash
+  cp ssh/id_kolla ~/.ssh
+  ```
 ## Configuration
 
-- Copy and edit the example config for [aio](example-config-aio.yml) or [multinode](example-config-multinode.yml).
-- The options are documented in comments.
-- Save your config as `user_config.yml`.
-- Edit [globals.yml](kolla-files/globals.yml)
-    - This is the configuration file of Kolla - [Read the Docs](#)
+- Edit the example user config and save it as `user_config.yml` (options are documented in config examples)
+  - For All in one deployment adjust the [example_aio_user_config.yml](example_aio_user_config.yml) example config
+  - For Multinode deployment adjust the [example_multinode_user_config.yml](example_multinode_user_config.yml) example config
+- Edit [kolla-files/globals.yml](kolla-files/globals.yml)
+    - This is the configuration file of Kolla - [Read the Docs](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
     - One of the most important options is `kolla_internal_vip_address`, which should be any *NOT USED* address in the **nat2** range, e.g.,
-
-```yaml
-kolla_internal_vip_address: 192.168.123.200 # The default
-```
+    ```yaml
+    kolla_internal_vip_address: 192.168.123.200 # The default
+    ```
 
 ## Usage
 
@@ -53,7 +61,7 @@ ansible-playbook -i all-in-one prepare.yml -e @user_config.yml
 - SSH into the node
 
 ```bash
-ssh <node-ip> -o "IdentitiesOnly=yes" -i ssh/id_kolla
+ssh <node-ip> -o "IdentitiesOnly=yes" -i ~/.ssh/id_kolla
 ```
 
 - Deploy using the deploy script
@@ -95,7 +103,7 @@ ansible-playbook -i multinode prepare.yml -e @user_config.yml
 - SSH into your deployment node
 
 ```bash
-ssh <deployment-node-ip> -o "IdentitiesOnly=yes" -i ssh/id_kolla
+ssh <deployment-node-ip> -o "IdentitiesOnly=yes" -i ~/.ssh/id_kolla
 ```
 
 ### Deploy script

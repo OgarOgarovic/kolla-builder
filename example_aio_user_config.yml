@@ -44,7 +44,7 @@ ssh_config: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/config"
 globals_file: globals.yml
 
 # Path to kolla-ansible source code
-kolla_source_host_path: "../kolla-ansible"
+kolla_source_host_path: "./kolla-ansible"
 
 # Name of the node
 name: "openstack-aio"
