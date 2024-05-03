@@ -5,6 +5,10 @@ This repository contains a set of Ansible playbooks that will spawn and configur
 ## Prerequisites
 
 - Libvirt
+  - Including `libvirt-dev`
+  ```bash
+  sudo apt-get install libvirt-dev
+  ``` 
 - Virt-manager (optional)
 - [Kolla image](#) - TODO: Upload the Kolla image somewhere
 - 3 NAT networks - [Guide](https://gulraezgulshan.medium.com/virtual-networking-in-linux-b1abcb983e72)
@@ -28,6 +32,11 @@ This repository contains a set of Ansible playbooks that will spawn and configur
   ```bash
   cp ssh/id_kolla ~/.ssh
   ```
+- Python libraries:
+```bash
+pip install libvirt-python
+pip install lxml
+```
 ## Configuration
 
 - Edit the example user config and save it as `user_config.yml` (options are documented in config examples)
