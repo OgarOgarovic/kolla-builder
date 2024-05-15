@@ -1,8 +1,12 @@
 ---
 # defaults file for create_multinode
-multinode_file_path: "multinode"
+multinode_file_path: "kolla-inventory"
 vm_list_path: "vm_list.yml"
-ansible_args: " ansible_ssh_user={{ kolla_user }} ansible_become=True ansible_private_key_file={{ kolla_ssh_key }} ansible_python_interpreter={{ kolla_python_interpereter }} "
+ansible_args: >-
+  ansible_ssh_user={{ kolla_user }}
+  ansible_become=True
+  ansible_private_key_file={{ kolla_ssh_key }}
+  ansible_python_interpreter={{ kolla_python_interpereter }}
 # Deafult number of CPU allocated to each node
 # it's recommended to allocate max CPUs
 default_cpu: 12
@@ -13,7 +17,5 @@ default_ram: 1024
 # Minimal 25GB to boot the image
 default_disksize: 25
 is_remote: false
-proxy_server_private_key: "lookup('ansible.builtin.env','HOME')}}/.ssh/id_rsa"
-proxy_ansible_args: "ansible_ssh_user=ubuntu ansible_become=True ansible_private_key_file={{ proxy_server_private_key}}"
-remote_username: ubuntu
+use_node_names: true
 nodes: []

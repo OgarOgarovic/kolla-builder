@@ -9,4 +9,3 @@
 - name: Set propper hostname
   hostname:
     name: "{{ kolla_hostname }}"
-  when: not is_aio

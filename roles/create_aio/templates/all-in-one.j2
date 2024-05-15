@@ -1,22 +1,23 @@
 # These initial groups are the only groups required to be modified. The
 # additional groups are for more control of the environment.
+
 [control]
- {{ current_ip  }}        {{ ansible_args }}
+ {{ node_name if is_remote else gen_ip_ssh }}        {{ ansible_args }} kolla_hostname={{ node_name }}
 
 [network]
- {{ current_ip  }}        {{ ansible_args }}
+ {{ node_name if is_remote else gen_ip_ssh }}        {{ ansible_args }} kolla_hostname={{ node_name }}
 
 [compute]
- {{ current_ip  }}        {{ ansible_args }}
+ {{ node_name if is_remote else gen_ip_ssh }}        {{ ansible_args }} kolla_hostname={{ node_name }}
 
 [storage]
- {{ current_ip  }}        {{ ansible_args }}
+ {{ node_name if is_remote else gen_ip_ssh }}        {{ ansible_args }} kolla_hostname={{ node_name }}
 
 [monitoring]
- {{ current_ip  }}        {{ ansible_args }}
+ {{ node_name if is_remote else gen_ip_ssh  }}        {{ ansible_args }} kolla_hostname={{ node_name }}
 
 [deployment]
- {{ current_ip  }}        {{ ansible_args }}
+ {{ node_name if is_remote else gen_ip_ssh }}        {{ ansible_args }} kolla_hostname={{ node_name }}
 
 # You can explicitly specify which hosts run each project by updating the
 # groups in the sections below. Common services are grouped together.

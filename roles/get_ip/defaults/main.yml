@@ -1,8 +1,0 @@
----
-# defaults file for get_ip
-interface: "default"
-mac: "52:54:00:6c:cd:59"
-machine_name: "kolla-prep"
-pause: false
-getip_retries: 20
-getip_delay: 3

@@ -1,26 +1,60 @@
 ---
 # tasks file for delete_vm
+- name: Gathering nodes for all-in-one deletion
+  set_fact:
+   to_delete:
+   - "{{ node_name }}"
+  when: is_aio
+
+- name: Gathering nodes for multinode deletion
+  set_fact:
+    to_delete: "{{ vms_to_delete }}"
+  when: not is_aio
+
+- debug:
+    msg: "{{ to_delete }}"
 - name: "Destroying VMs"
   community.libvirt.virt:
     name: "{{ item }}"
     state: "destroyed"
     force: true
-  loop: "{{ vms_to_delete }}"
+  loop: "{{ to_delete }}"
+
 - name: "Undefining VMs"
   shell: |
     virsh undefine --domain {{ item }}
-  loop: "{{ vms_to_delete }}"
+  loop: "{{ to_delete }}"
 - name: "Deleting diskimages"
   file:
     path: "{{image_pool ~'/'~ item}}.qcow2"
     state: absent
-  loop: "{{ vms_to_delete }}"
+  loop: "{{ to_delete }}"
 
-- name: Deleting SSH config entries
+- name: Deleting SSH config VM entries
   delegate_to: localhost
   blockinfile:
     path: "{{ ssh_config }}"
     marker: "# {mark} {{ item | upper }}"
     state: absent
-  loop: "{{ vms_to_delete }}"
-  when: edit_ssh_config
+  loop: "{{ to_delete }}"
+
+- name: Deleting SSH proxy entry
+  delegate_to: localhost
+  blockinfile:
+    path: "{{ ssh_config }}"
+    marker: "# {mark} KOLLA-PROXY"
+    state: absent
+  when: is_remote
+
+- name: Add remove host from dhcp pool
+  shell: |
+    virsh net-update {{ network_ssh }} delete ip-dhcp-host \
+    "<host name='{{ item }}'/>" \
+    --live --config
+  with_items: "{{ to_delete }}"
+
+- name: Remove dhcp leases
+  file:
+    path: "/var/lib/libvirt/dnsmasq/{{ network_ssh_virt_interface }}.status"
+    state: "absent"
+  when: delete_dhcp_leases

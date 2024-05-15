@@ -1,19 +1,12 @@
 ---
 # tasks file for create_multinode
-
-- name: Fetch IP address using shell command
-  vars:
-    command: "hostname -I | awk '{print $1}'"
-  shell: "{{ command }}"
-  register: iP_result
-  when: is_remote
-
 - name: Set IP fact
   set_fact:
-    remote_ip: "{{ iP_result.stdout }}"
+    remote_ip: "{{ ansible_host }}"
   when: is_remote
 
 - name: Generate VM list to delete
+  delegate_to: localhost
   template:
     src: vm_list.yml.j2
     dest: "{{ vm_list_path }}"
@@ -23,20 +16,16 @@
   with_items: "{{ nodes }}"
   vars:
     node: "{{ item }}"
-- name: Generate multinode inventory
-  template:
-    src: multinode.j2
-    dest: "{{ multinode_file_path }}"
+- name: Generate multinode inventory for localhost
+  include_tasks: inventory_create.yml
+
+- name: Generate multinode inventory for deployment node
+  include_tasks: inventory_create.yml
+  vars:
+    use_node_names: false
+    multinode_file_path: kolla-files/multinode
 
 - name: Add Proxy Jump to SSH Config
-  delegate_to: localhost
-  blockinfile:
-    marker: "# {mark} KOLLA-PROXY"
-    path: "{{ ssh_config }}"
-    block: |
-      Host kolla-proxy-jump
-      User  {{ remote_username }}
-      Hostname {{ remote_ip }}
-  when:
-  - edit_ssh_config
-  - is_remote
+  include_role:
+    name: ssh_jump
+  when: is_remote

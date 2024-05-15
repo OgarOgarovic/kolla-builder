@@ -1,10 +1,7 @@
 ---
 # defaults file for upload
-source_host_path: "../kolla-ansible"
+source_local_path: "../kolla-ansible"
 source_node_path: "/home/kolla/kolla-ansible"
 source_name: "Kolla Ansible"
-kolla_user: "kolla"
 kolla_group: "kolla"
-is_aio: true
 mode: ""
-multinode_file_path: "multinode"

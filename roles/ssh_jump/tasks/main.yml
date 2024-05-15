@@ -1,0 +1,14 @@
+---
+- name: Ensure ssh config exists
+  delegate_to: localhost
+  copy:
+    content: ""
+    dest: "{{ ssh_config }}"
+    force: false
+
+- name: Add machine to SSH config
+  delegate_to: localhost
+  blockinfile:
+    marker: "# {mark} KOLLA-PROXY"
+    path: "{{ ssh_config }}"
+    block: "{{ lookup('template', 'proxy_jump.j2') }}"

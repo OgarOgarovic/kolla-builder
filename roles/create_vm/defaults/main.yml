@@ -1,21 +1,18 @@
 ---
 # defaults file for common
-name: "kolla-node"
-image_pool: "{{ lookup('ansible.builtin.env','HOME')}}/pool"
-remote_image_pool: "{{ image_pool }}"
-image_path: "{{image_pool}}/kolla-image.qcow2"
-remote_image_path: "{{remote_image_pool}}/kolla-image.qcow2"
-disk_path: "{{ remote_image_pool if is_remote else image_pool  ~ '/' ~ name }}.qcow2"
-
+node_name: "kolla-node"
+image_pool: "{{ lookup('ansible.builtin.env', 'HOME') }}/pool"
+remote_image_pool: "/var/lib/libvirt/images"
+image_path: "{{ image_pool }}/kolla-image.qcow2"
+remote_image_path: "{{ remote_image_pool }}/kolla-image.qcow2"
+disk_path: "{{ remote_image_pool if is_remote else image_pool}}{{'/' ~ node_name }}.qcow2"
 ram_size: 8192
 cpu_count: 12
 disk_size: 50
 network_ssh: "nat1"
 network_openstack: "nat2"
 network_neutron: "nat3"
-is_aio: true
 generate_mac_addresses: false
 mac_addresses: []
-ssh_config: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/config"
-edit_ssh_config: false
+ssh_config: "ssh_config"
 is_remote: false

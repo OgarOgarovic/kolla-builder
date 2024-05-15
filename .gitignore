@@ -1,8 +1,6 @@
-all-in-one
-multinode
+kolla-inventory
 vm_list.yml
-!kolla-files/all-in-one
 user/*
 kolla-files/user-globals/*
 clouds.yaml
-!kolla-files/all-in-one
+kolla-files/multinode

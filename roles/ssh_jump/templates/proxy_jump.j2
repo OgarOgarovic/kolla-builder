@@ -1,0 +1,5 @@
+Host kolla-proxy-jump
+    User  {{ remote_username }}
+    Hostname {{ remote_ip }}
+    IdentityFile {{ proxy_server_private_key }}
+    IdentitiesOnly yes

@@ -1,7 +1,9 @@
 ---
 # defaults file for delete_vm
 vms_to_delete:
-- "kolla-node"
+  - "kolla-node"
 image_pool: "/var/cache/libvirt"
-ssh_config: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/config"
-edit_ssh_config: false
+ssh_config: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/config"
+delete_dhcp_leases: true
+network_ssh_virt_interface: "virbr0"
+is_remote: false

@@ -1,0 +1,21 @@
+---
+# 80 and 443 Are added automatically depending on your kolla settings
+# If your remote server is on the cloud, make sure
+# ingress to all ports you forward is allowed
+# Openstack services, which use kolla internall HAProxy
+reverse_proxy_vip_ports_openstack: []
+# Default Kolla ports if needed, forward by uncommenting
+# - 8774  # Compute
+# - 5000  # Identity
+# - 9292  # Image
+# - 9696  # Network
+# - 8780  # Placement
+# - ... Lookup in Horizon > API Access for more
+
+
+# Non-openstack services, that normally should not be accessible from outside
+# Format:
+# - ip: xxx.xxx.xxx.xxx
+#   port: integer
+#   ssl: boolean
+reverse_proxy_additional_servers: []

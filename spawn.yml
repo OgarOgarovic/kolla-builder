@@ -1,0 +1,11 @@
+---
+- name: Deploy Kolla Nodes
+  hosts: all
+  user: root
+
+  roles:
+    - name: create_aio
+      when: is_aio
+
+    - name: create_multinode
+      when: not is_aio

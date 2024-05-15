@@ -1,0 +1,26 @@
+---
+strict: true
+use_default_rules: true
+skip_list:
+  - no-changed-when
+  - no-handler
+  - unnamed-task
+  - experimental
+  - package-latest
+  - no-tabs
+  - fqcn-builtins
+  - name[template]
+  - fqcn[action]
+  - role-name
+  - key-order[task]
+  - no-free-form
+  - name[play]
+  - var-naming[no-role-prefix]
+  - risky-file-permissions
+  - risky-shell-pipe
+  - command-instead-of-shell
+  - command-instead-of-module
+  - ignore-errors
+  # - jinja[spacing]
+  - yaml[comments]
+  - schema[playbook]

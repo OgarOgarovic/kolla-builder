@@ -6,10 +6,10 @@
   register: temp_archives
   delegate_to: localhost
 - debug:
-    msg: "{{ source_host_path }}"
+    msg: "{{ source_local_path }}"
 - name: "Create archive for {{ source_name }} source code"
   archive:
-    path: "{{ source_host_path }}/*"
+    path: "{{ source_local_path }}/*"
     dest: "{{ temp_archives.path }}/upload.tgz"
   delegate_to: localhost
 - name: "Ensure that the {{ source_node_path }} directory exists on node"

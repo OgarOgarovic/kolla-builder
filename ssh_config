@@ -1,0 +1,55 @@
+# BEGIN OPENSTACK-CONTROL
+Host openstack-control
+    User kolla
+    Hostname 192.168.122.2
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "/home/matus/.ssh/id_kolla"
+    IdentitiesOnly yes
+    
+# END OPENSTACK-CONTROL
+# BEGIN OPENSTACK-COMPUTE-01
+Host openstack-compute-01
+    User kolla
+    Hostname 192.168.122.3
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "/home/matus/.ssh/id_kolla"
+    IdentitiesOnly yes
+    
+# END OPENSTACK-COMPUTE-01
+# BEGIN OPENSTACK-COMPUTE-02
+Host openstack-compute-02
+    User kolla
+    Hostname 192.168.122.4
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "/home/matus/.ssh/id_kolla"
+    IdentitiesOnly yes
+    
+# END OPENSTACK-COMPUTE-02
+# BEGIN OPENSTACK-COMPUTE-03
+Host openstack-compute-03
+    User kolla
+    Hostname 192.168.122.5
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "/home/matus/.ssh/id_kolla"
+    IdentitiesOnly yes
+    
+# END OPENSTACK-COMPUTE-03
+# BEGIN OPENSTACK-DEPLOYMENT
+Host openstack-deployment
+    User kolla
+    Hostname 192.168.122.6
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "/home/matus/.ssh/id_kolla"
+    IdentitiesOnly yes
+    
+# END OPENSTACK-DEPLOYMENT

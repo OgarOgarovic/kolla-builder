@@ -1,0 +1,28 @@
+stream {
+{% macro stream(port,ssl=false, ip=globals.kolla_internal_vip_address)%}
+server {
+    listen {{port}};
+    proxy_pass  {{ip}}:{{port}};
+    {% if ssl %}
+    ssl_preread on;
+    {% endif %}
+}
+
+{%- endmacro%}
+
+{% if use_tls| bool%}
+{{ stream(443,ssl=true) }}
+{% else %}
+{{ stream(80) }}
+{%- endif %}
+
+{% for port in reverse_proxy_vip_ports_openstack %}
+{{ stream(port,ssl=globals.kolla_enable_tls_external) }}
+{%- endfor %}
+
+
+{% for server in reverse_proxy_additional_servers %}
+{{ stream(server.port,ssl=server.ssl, ip=server.ip) }}
+{%- endfor%}
+
+}

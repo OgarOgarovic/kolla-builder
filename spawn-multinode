@@ -1,3 +1,0 @@
-#!/bin/bash
-set -euox pipefail
-ansible-playbook -i local spawn-multinode.yml -e @$1

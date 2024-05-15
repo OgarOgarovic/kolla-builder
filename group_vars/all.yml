@@ -3,48 +3,41 @@
 # NOTE: these are defaults should not be touched by user
 #      Please use -e,--extra-vars, @config-file.yml
 #      to change variables
-# Create node (host)
-name: "kolla-node-aio"
-image_pool: "/var/cache/libvirt"
-image_path: "{{image_pool}}/kolla-image.qcow2"
-disk_path: "{{image_pool ~ '/' ~ name }}.qcow2"
+node_name: "kolla-node-aio"
+ssh_connection_timeout: 300
+image_pool: "/var/lib/libvirt/images"
+image_path: "{{ image_pool }}/kolla-image.qcow2"
+is_remote: false
+remote_username: ubuntu
 ram_size: 10000
 cpu_count: 12
 disk_size: 50
-network_ssh: "nat2"
+network_ssh: "nat1"
 network_openstack: "nat2"
 network_neutron: "nat3"
 is_aio: true
 mac_addresses: {}
-# Delete node (host)
 vms_to_delete:
-- "{{ name }}"
-# Write inventory (host)
-aio_file_path: "all-in-one"
+  - "{{ node_name }}"
 kolla_user: "kolla"
-#TODO: figure out how to do this without using absolute path
-kolla_ssh_key: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/id_kola"
-ssh_config: "{{ lookup('ansible.builtin.env','HOME')}}/.ssh/config"
-edit_ssh_config: false
+kolla_ssh_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_kola"
+ssh_config: "ssh_config"
 kolla_python_interpereter: "/home/kolla/kolla/bin/python"
-ansible_args: " ansible_ssh_user={{ kolla_user }} ansible_become=True ansible_private_key_file={{ kolla_ssh_key }} ansible_python_interpreter={{ kolla_python_interpereter }}"
-# Prepare node (guest)
+ansible_args: >-
+  ansible_ssh_user={{ kolla_user }}
+  ansible_become=True
+  ansible_private_key_file={{ kolla_ssh_key }}
+  ansible_python_interpreter={{ kolla_python_interpereter }}
+
 node_vg: ubuntu-vg
 node_lv: ubuntu-lv
 globals_file: globals.yml
-# Upload (guest)
-kolla_source_host_path: "../kolla-ansible"
+kolla_source_local_path: "../kolla-ansible"
 kolla_source_node_path: "/home/kolla/kolla-ansible"
-## Additional Uploads, such as mounted source codes
-## This is an experimental feature, works only for aio deployment for now
-
-# Additional uploads path on nodes
 additional_upload_node_path: "/home/kolla"
-# Mode (recommended to be 0777 if you plan to mount it to containers using `default_extra_mounts`)
 additional_upload_mode: "0777"
-# List of additional directories to upload
-# They will be uploaded on all nodes
 git_patch_kolla: false
 git_branch: master
 git_patches: []
 additional_uploads: []
+additional_uploads_deploy_node: []

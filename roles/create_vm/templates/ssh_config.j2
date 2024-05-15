@@ -1,11 +1,9 @@
-Host {{ name }}
+Host {{ node_name }}
     User {{ kolla_user }}
-    Hostname {{ current_ip }}
+    Hostname {{ gen_ip_ssh }}
     CheckHostIP no
     StrictHostKeyChecking no
     ServerAliveInterval 30
     IdentityFile "{{ kolla_ssh_key }}"
     IdentitiesOnly yes
-    {% if is_remote %}
-    ProxyJump kolla-proxy-jump
-    {% endif %}
+    {% if is_remote %} ProxyJump kolla-proxy-jump {% endif %}

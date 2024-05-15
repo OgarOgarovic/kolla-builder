@@ -1,26 +1,57 @@
 ---
+# - name: Wait for hosts to be avialable
+#   hosts: all
+#   user: root
+#   vars:
+#     ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+#   tasks:
+#     - wait_for_connection:
+#         timeout: "{{ ssh_connection_timeout }}"
+
 - name: Prepare Kolla Nodes
   hosts: all
   user: root
-  gather_facts: yes
+  gather_facts: true
   vars:
     ansible_ssh_common_args: '-o IdentitiesOnly=yes'
-  roles:
-    - prepare_nodes
+  tasks:
+    - name: Prepare nodes for Kolla deployment
+      include_role:
+        name: prepare_nodes
 
-- name: Upload files to deploy node
+    - name: Upload Additional files to nodes
+      include_role:
+        name: upload_to_nodes
+      vars:
+        source_local_path: "{{ item }}"
+        source_node_path: "{{ additional_upload_node_path ~ '/' ~ item.split('/')[-1] }}"
+      with_items: "{{ additional_uploads }}"
+
+- name: Prepare deployment Node
   hosts: deployment
   user: root
   vars:
     ansible_ssh_common_args: '-o IdentitiesOnly=yes'
   roles:
-  - name: "upload_to_nodes"
-    vars:
-      source_host_path: "{{ kolla_source_host_path }}"
-  - name: git_patch
-    when: git_patch_kolla
-    delegate_to: localhost
-  - name: "upload_to_nodes"
-    vars:
-      source_host_path: "{{  patched_git_repo if git_patch_kolla  else kolla_source_host_path }}"
-      source_node_path: "{{ kolla_source_node_path }}"
+    - name: git_patch
+      delegate_to: localhost
+      when: git_patch_kolla
+
+  tasks:
+    - name: Prepare deployment node for Kolla deployment
+      include_role:
+        name: upload_to_nodes
+    - name: Upload Kolla Ansible
+      include_role:
+        name: "upload_archive"
+      vars:
+        source_local_path: "{{  patched_git_repo if git_patch_kolla else kolla_source_local_path }}"
+        source_node_path: "{{ kolla_source_node_path }}"
+
+    - name: Upload Additional files to Deployment node
+      include_role:
+        name: "upload_archive"
+      vars:
+        source_local_path: "{{ item }}"
+        source_node_path: "{{ additional_upload_node_path ~ '/' ~ item.split('/')[-1] }}"
+      with_items: "{{ additional_uploads_deploy_node }}"

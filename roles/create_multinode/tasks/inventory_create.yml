@@ -1,0 +1,6 @@
+---
+- name: Generate multinode inventory
+  delegate_to: localhost
+  template:
+    src: multinode.j2
+    dest: "{{ multinode_file_path }}"

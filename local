@@ -1,5 +1,1 @@
-# A place to put your stage hosts
-# Examples:
-#
 localhost ansible_connection=local
-

@@ -1,0 +1,29 @@
+---
+# tasks file for nginx_proxy
+- name: Register Kolla Variables
+  set_fact:
+    globals: "{{ lookup('file', 'kolla-files/' ~ globals_file) | from_yaml }}"
+- name: Get Kolla uses external TLS
+  set_fact:
+    use_tls: "{{ globals.kolla_enable_tls_external | default(false) }}"
+
+- name: Ensure nginx is installed
+  apt:
+    name: nginx
+    state: present
+
+- name: Template SSL passthrough config
+  template:
+    src: passthrough.conf.j2
+    dest: /etc/nginx/modules-enabled/passthrough.conf
+
+- name: Ensure that the deafult nginx server is disabled
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Reload Nginx services
+  ansible.builtin.systemd:
+    name: nginx.service
+    state: reloaded
+

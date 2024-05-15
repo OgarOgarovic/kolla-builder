@@ -1,10 +1,21 @@
 ---
 # tasks file for kolla-config
+- name: Set IP fact
+  set_fact:
+    remote_ip: "{{ ansible_host }}"
+
+  when: is_remote
 - include_role:
     name: create_vm
 
 - name: Template all in one file
+  delegate_to: localhost
   template:
     src: all-in-one.j2
-    dest: "{{ aio_file_path }}"
-  when: is_aio
+    dest: kolla-inventory
+
+- name: Add Proxy Jump to SSH Config
+  include_role:
+    name: ssh_jump
+  when:
+    - is_remote

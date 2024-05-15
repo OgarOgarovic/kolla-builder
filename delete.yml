@@ -2,6 +2,7 @@
 - name: Delete Kolla Nodes
   hosts: all
   user: root
+  ignore_errors: true
 
   roles:
     - delete_nodes
