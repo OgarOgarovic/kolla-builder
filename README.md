@@ -13,7 +13,7 @@ This repository contains a set of Ansible playbooks that will spawn and configur
   ```bash
   sudo apt install virt-manager
   ```
-- [Kolla image](#) - TODO: Upload the Kolla image somewhere
+- [Kolla image](https://api.gx-scs.sovereignit.cloud:8080/swift/v1/AUTH_0b3c75f80b6743778daccec0da423465/Kolla%20Builder%20Image/kolla-image.qcow2)
 - 3 NAT networks - [Guide](https://gulraezgulshan.medium.com/virtual-networking-in-linux-b1abcb983e72)
   - **nat1:** `192.168.122.0/24` for SSH and Ansible
   - **nat2:** `192.168.123.0/24` for OpenStack management network
@@ -43,7 +43,7 @@ pip install lxml
 ```
 ## Configuration
 
-- Edit the [example user config](example_config,yml) and options are documented in config examples.
+- Edit the [example user config](example_config.yml) and options are documented in config examples.
 
 - Edit [kolla-files/globals.yml](kolla-files/globals.yml)
     - This is the configuration file of Kolla - [Read the Docs](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
