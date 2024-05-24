@@ -1,0 +1,22 @@
+---
+# Run ARA server
+- name: Ensure Docker service is running
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Pull ARA server image
+  docker_image:
+    name: recordsansible/ara-api
+    source: pull
+
+- name: Run ARA server container (server only)
+  docker_container:
+    name: ara-server
+    image: recordsansible/ara-api
+    state: started
+    ports:
+      - "{{ ara_server_port }}:8000"
+    env:
+      ARA_ALLOWED_HOSTS: '["127.0.0.1", "localhost", "::1"]'

@@ -41,6 +41,7 @@ This repository contains a set of Ansible playbooks that will spawn and configur
 pip install libvirt-python
 pip install lxml
 ```
+- Docker for ARA (optional) - for ARA recording Ansible docker needs to be installed and runnig
 ## Configuration
 
 - Edit the [example user config](example_config.yml) and options are documented in config examples.

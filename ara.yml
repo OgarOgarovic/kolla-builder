@@ -1,0 +1,16 @@
+---
+- name: Deploy ARA recording to host
+  hosts: all
+  user: root
+
+  tasks:
+    - name: Deploy ARA if enabled
+      include_role:
+        name: deploy_ara_api
+      when: ara_enable | bool
+
+    - name: Configure ARA recording on host if enabled
+      include_role:
+        name: config_ara_recording
+      when: ara_enable | bool
+
