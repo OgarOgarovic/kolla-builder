@@ -54,6 +54,7 @@
   with_items: "{{ to_delete }}"
 
 - name: Remove dhcp leases
+  become: yes
   file:
     path: "/var/lib/libvirt/dnsmasq/{{ network_ssh_virt_interface }}.status"
     state: "absent"
