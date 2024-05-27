@@ -3,8 +3,8 @@
 - name: Set IP fact
   set_fact:
     remote_ip: "{{ ansible_host }}"
-
   when: is_remote
+
 - include_role:
     name: create_vm
 

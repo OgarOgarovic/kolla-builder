@@ -1,26 +1,31 @@
 ---
+- name: Get correct python path
+  set_fact:
+    python_bin_path: "{{ ansible_facts.python.executable | dirname }}"
+  when: python_bin_path is not defined or python_bin_path == ''
+
 - name: Install ARA
   pip:
     name: "ara"
-    executable: pip3
+    executable: "{{ (python_bin_path, 'pip') | path_join }}"
 
 - name: Ensure [ara] section in ansible.cfg exists
   ansible.builtin.lineinfile:
-    path: "{{ ansible_config_file }}"
+    path: "{{ config_to_edit }}"
     regexp: '^\[ara\]'
     line: "\n[ara]"
     state: present
 
 - name: Add ara to callback_whitelist
   ansible.builtin.lineinfile:
-    path: "{{ ansible_config_file }}"
+    path: "{{ config_to_edit }}"
     regexp: '^callback_whitelist'
     line: 'callback_whitelist = ara'
     state: present
 
 - name: Set ARA api_client to http
   ansible.builtin.lineinfile:
-    path: "{{ ansible_config_file }}"
+    path: "{{ config_to_edit }}"
     regexp: '^api_client'
     insertafter: '^\[ara\]'
     line: 'api_client = http'
@@ -28,14 +33,16 @@
 
 - name: Set ARA api_server to the correct URL
   ansible.builtin.lineinfile:
-    path: "{{ ansible_config_file }}"
+    path: "{{ config_to_edit }}"
     regexp: '^api_server'
     insertafter: '^\[ara\]'
     line: "api_server = http://{{ ara_server_ip }}:{{ ara_server_port }}"
     state: present
 
 - name: Get ARA callback plugins definition
-  shell: "python3 -m ara.setup.callback_plugins"
+  ansible.builtin.shell: |
+    . {{ (python_bin_path, 'activate') | path_join }}
+    python3 -m ara.setup.callback_plugins
   register: ara_callbacks
 
 - name: Set ara_callbacks_line
@@ -44,14 +51,16 @@
 
 - name: Set ARA callback_plugins
   ansible.builtin.lineinfile:
-    path: "{{ ansible_config_file }}"
+    path: "{{ config_to_edit }}"
     regexp: '^callback_plugins'
     insertafter: '^\[defaults\]'
     line: "callback_plugins = {{ ara_callbacks_line }}"
     state: present
 
 - name: Get ARA action plugins definition
-  shell: "python3 -m ara.setup.action_plugins"
+  shell: |
+    . {{ (python_bin_path, 'activate') | path_join }}
+    python3 -m ara.setup.action_plugins
   register: ara_actions
 
 - name: Set ara_actions_line
@@ -60,7 +69,7 @@
 
 - name: Set ARA action_plugins
   ansible.builtin.lineinfile:
-    path: "{{ ansible_config_file }}"
+    path: "{{ config_to_edit }}"
     regexp: '^action_plugins'
     insertafter: '^\[defaults\]'
     line: "action_plugins = {{ ara_actions_line }}"

@@ -17,9 +17,7 @@
 - name: Resize disk Image to coreect size
   shell: |
     qemu-img resize {{ disk_path }} {{ disk_size }}G
-- debug:
-    msg: |
-      {{ lookup('template', 'kolla-node.xml.j2') }}
+
 - name: Define a VM
   community.libvirt.virt:
     command: define

@@ -4,7 +4,7 @@
   service:
     name: docker
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Pull ARA server image
   docker_image:
@@ -19,4 +19,5 @@
     ports:
       - "{{ ara_server_port }}:8000"
     env:
-      ARA_ALLOWED_HOSTS: '["127.0.0.1", "localhost", "::1"]'
+      # TODO: Add hosts dynamically and restart?
+      ARA_ALLOWED_HOSTS: '["*"]'
