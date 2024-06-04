@@ -1,13 +1,13 @@
 ---
-- name: Get correct python path
-  set_fact:
-    python_bin_path: "{{ ansible_facts.python.executable | dirname }}"
-  when: python_bin_path is not defined or python_bin_path == ''
-
 - name: Install ARA
   pip:
     name: "ara"
-    executable: "{{ (python_bin_path, 'pip') | path_join }}"
+
+- name: Ensure ansible.cfg exists
+  ansible.builtin.template:
+    src: ansible.cfg.j2
+    dest: ansible.cfg
+    force: false
 
 - name: Ensure [ara] section in ansible.cfg exists
   ansible.builtin.lineinfile:
@@ -39,15 +39,19 @@
     line: "api_server = http://{{ ara_server_ip }}:{{ ara_server_port }}"
     state: present
 
+- name: Construct python module call command
+  set_fact:
+    python_command: "{{ (python_bin_path, 'python') | path_join }}"
+  when: python_bin_path is defined and python_bin_path != ""
+
 - name: Get ARA callback plugins definition
-  ansible.builtin.shell: |
-    . {{ (python_bin_path, 'activate') | path_join }}
-    python3 -m ara.setup.callback_plugins
-  register: ara_callbacks
+  ansible.builtin.shell:
+    "{{ python_command }} -m ara.setup.callback_plugins"
+  register: cmd_output
 
 - name: Set ara_callbacks_line
   set_fact:
-    ara_callbacks_line: "{{ ara_callbacks.stdout }}"
+    ara_callbacks_line: "{{ cmd_output.stdout }}"
 
 - name: Set ARA callback_plugins
   ansible.builtin.lineinfile:
@@ -58,14 +62,13 @@
     state: present
 
 - name: Get ARA action plugins definition
-  shell: |
-    . {{ (python_bin_path, 'activate') | path_join }}
-    python3 -m ara.setup.action_plugins
-  register: ara_actions
+  ansible.builtin.shell:
+    "{{ python_command }} -m ara.setup.action_plugins"
+  register: cmd_output
 
 - name: Set ara_actions_line
   set_fact:
-    ara_actions_line: "{{ ara_actions.stdout }}"
+    ara_actions_line: "{{ cmd_output.stdout }}"
 
 - name: Set ARA action_plugins
   ansible.builtin.lineinfile:

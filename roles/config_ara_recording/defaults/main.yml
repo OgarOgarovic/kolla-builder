@@ -1,6 +1,8 @@
 ---
 ara_enable: true
-ara_server_ip: '127.0.0.1'
+ara_server_ip: "127.0.0.1"
 ara_server_port: 8000
-python_bin_path: ''
+python_bin_path: ""
+python_command: "python"
 config_to_edit: "./ansible.cfg"
+ansible_become: false

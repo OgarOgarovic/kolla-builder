@@ -59,8 +59,8 @@ pip install lxml
 The `builder` script is used to manage nodes with `ansible-playbook` .
 #### Deploying ARA records ansible server
 
-To deploy ARA server and start recording host ansible plays with ensure flag
-`ara_enable` in `globals.yml` is set to true and run:
+To deploy ARA server and start recording host ansible plays with ARA,
+ensure flag `ara_enable` in `user_config.yml` is set to true and run:
 
 ```bash
 ./builder ara user/local-aio.yml

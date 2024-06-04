@@ -47,7 +47,6 @@
       vars:
         source_local_path: "{{  patched_git_repo if git_patch_kolla else kolla_source_local_path }}"
         source_node_path: "{{ kolla_source_node_path }}"
-
     - name: Upload Additional files to Deployment node
       include_role:
         name: "upload_archive"
@@ -55,3 +54,31 @@
         source_local_path: "{{ item }}"
         source_node_path: "{{ additional_upload_node_path ~ '/' ~ item.split('/')[-1] }}"
       with_items: "{{ additional_uploads_deploy_node }}"
+
+- name: Configure ARA recording on deployment Node
+  hosts: deployment
+  become: false
+  vars:
+    ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+  pre_tasks:
+    - name: Get target hostname
+      set_fact:
+        target_host: "{{ inventory_hostname }}"
+
+    - name: Check route on controller for target destination
+      ansible.builtin.command: ip route get {{ target_host }}
+      register: route_output
+      delegate_to: localhost
+
+    - name: Register the controller outgoing IP
+      ansible.builtin.set_fact:
+        controller_ip: "{{ route_output.stdout_lines[0] | regex_replace('^.* src (\\d*(\\.\\d*){3}).*$', '\\1') }}"
+  roles:
+    - role: config_ara_recording
+      become: true
+      become_user: kolla
+      vars:
+        ara_server_ip: "{{ controller_ip }}"
+        config_to_edit: "~/ansible.cfg"
+        python_bin_path: "/home/kolla/kolla/bin/"
+      when: ara_enable | bool

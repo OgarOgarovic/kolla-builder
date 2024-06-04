@@ -9,45 +9,45 @@
 
     - name: create_multinode
       when: not is_aio
-
-  tasks:
-    - name: Load inventory file
-      ansible.builtin.command: ansible-inventory -i kolla-inventory --list
-      register: inventory_content
-
-    - name: Parse the inventory map
-      set_fact:
-        inventory_map: "{{ inventory_content.stdout | from_json }}"
-
-    - name: Get deployment host IP
-      set_fact:
-        deployment_hosts: "{{ inventory_map['deployment']['hosts'] }}"
-
-    - name: Create ara_deployments group
-      ansible.builtin.add_host:
-        hostname: "{{ item }}"
-        ansible_private_key_file: "{{ kolla_ssh_key }}"
-        group: ara_deployments
-      loop: "{{ deployment_hosts }}"
-
-- name: Configure ARA recording on deployment nodes
-  hosts: ara_deployments
-  user: kolla
-  gather_facts: false
-
-  pre_tasks:
-    - name: Wait for connection to become ready
-      ansible.builtin.wait_for_connection:
-        timeout: 180
-
-    - name: Gather facts
-      ansible.builtin.setup:
-
-  roles:
-    - role: config_ara_recording
-      vars:
-        # TODO: Better solution to get the controllers IP
-        ara_server_ip: "{{ ansible_facts['env']['SSH_CLIENT'].split() | first }}"
-        config_to_edit: "~/ansible.cfg"
-        python_bin_path: "~/kolla/bin/"
-      when: ara_enable | bool
+#
+#   tasks:
+#     - name: Load inventory file
+#       ansible.builtin.command: ansible-inventory -i kolla-inventory --list
+#       register: inventory_content
+#
+#     - name: Parse the inventory map
+#       set_fact:
+#         inventory_map: "{{ inventory_content.stdout | from_json }}"
+#
+#     - name: Get deployment host IP
+#       set_fact:
+#         deployment_hosts: "{{ inventory_map['deployment']['hosts'] }}"
+#
+#     - name: Create ara_deployments group
+#       ansible.builtin.add_host:
+#         hostname: "{{ item }}"
+#         ansible_private_key_file: "{{ kolla_ssh_key }}"
+#         group: ara_deployments
+#       loop: "{{ deployment_hosts }}"
+#
+# - name: Configure ARA recording on deployment nodes
+#   hosts: ara_deployments
+#   user: kolla
+#   gather_facts: false
+#
+#   pre_tasks:
+#     - name: Wait for connection to become ready
+#       ansible.builtin.wait_for_connection:
+#         timeout: 180
+#
+#     - name: Gather facts
+#       ansible.builtin.setup:
+#
+#   roles:
+#     - role: config_ara_recording
+#       vars:
+#         # TODO: Better solution to get the controllers IP
+#         ara_server_ip: "{{ ansible_facts['env']['SSH_CLIENT'].split() | first }}"
+#         config_to_edit: "~/ansible.cfg"
+#         python_bin_path: "~/kolla/bin/"
+#       when: ara_enable | bool
