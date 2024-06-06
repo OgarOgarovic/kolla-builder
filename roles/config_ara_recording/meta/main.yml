@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Ivan Vnučko
+  description: "Install ARA plugin and configure ansible to use it"
+  company: dNation
+  license: GPL-2.0-or-later
+  min_ansible_version: "2.1"
+  galaxy_tags: []
+dependencies: []

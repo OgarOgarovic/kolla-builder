@@ -1,0 +1,27 @@
+---
+- name: Deploy ARA recording to host
+  hosts: all
+  user: root
+
+  tasks:
+    - name: Deploy ARA if enabled
+      include_role:
+        name: deploy_ara_api
+      when: ara_enable | bool
+
+    - name: Set ARA server IP
+      ansible.builtin.set_fact:
+        ara_server_ip: "{{ inventory_hostname }}"
+      when: ansible_hostname != inventory_hostname
+
+    - name: Configure ARA recording on control if enabled
+      include_role:
+        name: config_ara_recording
+        apply:
+          delegate_to: localhost
+      when: ara_enable | bool
+
+    - name: Configure ARA recording on host if enabled and remote
+      include_role:
+        name: config_ara_recording
+      when: ara_enable | bool and ara_server_ip != "127.0.0.1"

@@ -1,0 +1,79 @@
+---
+- name: Install ARA
+  pip:
+    name: "ara"
+
+- name: Ensure ansible.cfg exists
+  ansible.builtin.template:
+    src: ansible.cfg.j2
+    dest: ansible.cfg
+    force: false
+
+- name: Ensure [ara] section in ansible.cfg exists
+  ansible.builtin.lineinfile:
+    path: "{{ config_to_edit }}"
+    regexp: '^\[ara\]'
+    line: "\n[ara]"
+    state: present
+
+- name: Add ara to callback_whitelist
+  ansible.builtin.lineinfile:
+    path: "{{ config_to_edit }}"
+    regexp: '^callback_whitelist'
+    line: 'callback_whitelist = ara'
+    state: present
+
+- name: Set ARA api_client to http
+  ansible.builtin.lineinfile:
+    path: "{{ config_to_edit }}"
+    regexp: '^api_client'
+    insertafter: '^\[ara\]'
+    line: 'api_client = http'
+    state: present
+
+- name: Set ARA api_server to the correct URL
+  ansible.builtin.lineinfile:
+    path: "{{ config_to_edit }}"
+    regexp: '^api_server'
+    insertafter: '^\[ara\]'
+    line: "api_server = http://{{ ara_server_ip }}:{{ ara_server_port }}"
+    state: present
+
+- name: Construct python module call command
+  set_fact:
+    python_command: "{{ (python_bin_path, 'python') | path_join }}"
+  when: python_bin_path is defined and python_bin_path != ""
+
+- name: Get ARA callback plugins definition
+  ansible.builtin.shell:
+    "{{ python_command }} -m ara.setup.callback_plugins"
+  register: cmd_output
+
+- name: Set ara_callbacks_line
+  set_fact:
+    ara_callbacks_line: "{{ cmd_output.stdout }}"
+
+- name: Set ARA callback_plugins
+  ansible.builtin.lineinfile:
+    path: "{{ config_to_edit }}"
+    regexp: '^callback_plugins'
+    insertafter: '^\[defaults\]'
+    line: "callback_plugins = {{ ara_callbacks_line }}"
+    state: present
+
+- name: Get ARA action plugins definition
+  ansible.builtin.shell:
+    "{{ python_command }} -m ara.setup.action_plugins"
+  register: cmd_output
+
+- name: Set ara_actions_line
+  set_fact:
+    ara_actions_line: "{{ cmd_output.stdout }}"
+
+- name: Set ARA action_plugins
+  ansible.builtin.lineinfile:
+    path: "{{ config_to_edit }}"
+    regexp: '^action_plugins'
+    insertafter: '^\[defaults\]'
+    line: "action_plugins = {{ ara_actions_line }}"
+    state: present

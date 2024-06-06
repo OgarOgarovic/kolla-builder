@@ -3,6 +3,7 @@
 # NOTE: these are defaults should not be touched by user
 #      Please use -e,--extra-vars, @config-file.yml
 #      to change variables
+---
 node_name: "kolla-node-aio"
 ssh_connection_timeout: 300
 image_pool: "/var/lib/libvirt/images"
@@ -41,3 +42,4 @@ git_branch: master
 git_patches: []
 additional_uploads: []
 additional_uploads_deploy_node: []
+ara_enable: true

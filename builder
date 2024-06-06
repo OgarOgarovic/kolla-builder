@@ -9,7 +9,7 @@ show_help() {
     echo "  -h                  Display this help message"
     echo ""
     echo "Actions:"
-    echo "  spawn, prepare, delete, nginx"
+    echo "  ara, spawn, prepare, delete, nginx"
     echo ""
     echo "Example:"
     echo "  $0 -r spawn extravars.yml -v"
@@ -56,9 +56,9 @@ shift 2
 action=${action%.yml}
 
 # Validate the action
-valid_actions=("spawn" "prepare" "delete" "nginx")
+valid_actions=("ara" "spawn" "prepare" "delete" "nginx")
 if [[ ! " ${valid_actions[@]} " =~ " ${action} " ]]; then
-    echo "Error: invalid action. Valid actions are: spawn, prepare, delete, nginx."
+    echo "Error: invalid action. Valid actions are: ara, spawn, prepare, delete, nginx."
     show_help
     exit 1
 fi

@@ -41,6 +41,7 @@ This repository contains a set of Ansible playbooks that will spawn and configur
 pip install libvirt-python
 pip install lxml
 ```
+- Docker for ARA (optional) - for ARA recording Ansible docker needs to be installed and runnig
 ## Configuration
 
 - Edit the [example user config](example_config.yml) and options are documented in config examples.
@@ -56,6 +57,19 @@ pip install lxml
 
 ### Building Environment
 The `builder` script is used to manage nodes with `ansible-playbook` .
+#### Deploying ARA records ansible server
+
+To deploy ARA server and start recording host ansible plays with ARA,
+ensure flag `ara_enable` in `user_config.yml` is set to true and run:
+
+```bash
+./builder ara user/local-aio.yml
+```
+
+Nodes plays will be recorded to this server too. ARA UI will then be accessible
+on localhost/remote host on specified `ara_server_port`, 8000 by default.
+
+
 #### Spawning Nodes
 
 To spawn a node or nodes, run:
