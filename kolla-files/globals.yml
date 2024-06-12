@@ -10,7 +10,7 @@
 # kolla_enable_tls_backend: "yes"
 # kolla_copy_ca_into_containers: "yes"
 openstack_cacert: /etc/pki/tls/certs/ca-bundle.crt
-kolla_dev_mode: "no"
+kolla_dev_mode: "yes"
 # customize_etc_hosts: "no"
 # database_tls_backend_enable: "yes"
 # database_tls_frontend_enable: "yes"
@@ -199,6 +199,8 @@ neutron_external_interface: "enp7s0"
 # This should be changed from the default in the event of a multi-region deployment
 # where the VIPs of different regions reside on a common subnet.
 #keepalived_virtual_router_id: "51"
+enable_keepalived: false
+enable_haproxy: true
 
 ###################
 # Dimension options
@@ -269,7 +271,7 @@ neutron_external_interface: "enp7s0"
 #####################
 # Backend TLS options
 #####################
-#kolla_enable_tls_backend: "no"
+kolla_enable_tls_backend: "yes"
 #kolla_verify_tls_backend: "yes"
 #kolla_tls_backend_cert: "{{ kolla_certificates_dir }}/backend-cert.pem"
 #kolla_tls_backend_key: "{{ kolla_certificates_dir }}/backend-key.pem"
@@ -323,7 +325,7 @@ enable_openstack_core: "yes"
 #enable_haproxy: "yes"
 #enable_keepalived: "{{ enable_haproxy | bool }}"
 #enable_keystone: "{{ enable_openstack_core | bool }}"
-#enable_mariadb: "yes"
+enable_mariadb: "yes"
 enable_memcached: "yes"
 #enable_neutron: "{{ enable_openstack_core | bool }}"
 #enable_nova: "{{ enable_openstack_core | bool }}"

@@ -1,0 +1,42 @@
+---
+- name: Reset network and prepare for deploy
+  hosts: all
+  become: yes
+  gather_facts: false
+  vars:
+    networks:
+      - template: 'libvirt/net_neutron.xml.j2'
+        name: "{{ network_neutron }}"
+      - template: 'libvirt/net_openstack.xml.j2'
+        name: "{{ network_openstack }}"
+      - template: 'libvirt/net_ssh.xml.j2'
+        name: "{{ network_ssh }}"
+
+  tasks:
+    - name: Undefine all networks
+      community.libvirt.virt_net:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ network_ssh }}"
+        - "{{ network_openstack }}"
+        - "{{ network_neutron }}"
+
+    - name: Define all networks
+      community.libvirt.virt_net:
+        command: define
+        name: "{{ item.name }}"
+        xml: "{{ lookup('template', item.template) }}"
+      loop:
+        - template: 'libvirt/net_neutron.xml.j2'
+          name: "{{ network_neutron }}"
+        - template: 'libvirt/net_openstack.xml.j2'
+          name: "{{ network_openstack }}"
+        - template: 'libvirt/net_ssh.xml.j2'
+          name: "{{ network_ssh }}"
+
+    - name: Start all networks
+      community.libvirt.virt_net:
+        command: start
+        name: "{{ item.name }}"
+      loop: "{{ networks }}"
