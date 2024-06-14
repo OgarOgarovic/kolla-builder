@@ -71,7 +71,7 @@ ssh_config: "ssh_config"
 # ARA records ansible tool can be deployed to track all ansible
 # runs on the host and nodes in one UI accessible on the host
 # (local or remote)
-ara_enable: false
+ara_enable: true
 ara_server_port: 8000
 
 ## KOLLA CONFIGURATION
@@ -161,7 +161,25 @@ default_disksize: 25
 # 4+1 node example (3 compute nodes, one control node, one deployment node)
 # You can add more if you wish, or create dedicated network nodes for example
 nodes:
-  - name: "openstack-control"
+  - name: "openstack-control-01"
+    control: true
+    storage: true
+    monitoring: true
+    network: true
+    compute: false
+    ram_size: 2048
+    cpu_count: 4
+
+  - name: "openstack-control-02"
+    control: true
+    storage: true
+    monitoring: true
+    network: true
+    compute: false
+    ram_size: 2048
+    cpu_count: 4
+
+  - name: "openstack-control-03"
     control: true
     storage: true
     monitoring: true
@@ -172,19 +190,7 @@ nodes:
 
   - name: "openstack-deployment"
     deployment: true
-    ram_size: 1024
-
-  - name: "openstack-storage-01"
-    storage: true
-    ram_size: 1024
-
-  - name: "openstack-storage-02"
-    storage: true
-    ram_size: 1024
-
-  - name: "openstack-storage-03"
-    storage: true
-    ram_size: 1024
+    ram_size: 2048
 
   - name: "openstack-compute"
     compute: true
