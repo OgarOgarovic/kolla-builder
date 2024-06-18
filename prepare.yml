@@ -67,19 +67,19 @@
         cmd: 'who | cut -d "(" -f2 | cut -d ")" -f1'
       changed_when: false
       check_mode: false
-      register: deployment_ip_data
+      register: host_ip_data
       when: ara_enable | bool
 
-    - name: Extract control IP from data
+    - name: Extract host IP from data
       ansible.builtin.set_fact:
-        deployment_ip: "{{ deployment_ip_data.stdout }}"
+        host_ip: "{{ host_ip_data.stdout_lines[0] }}"
 
   roles:
     - role: config_ara_recording
       become: true
       become_user: kolla
       vars:
-        ara_server_ip: "{{ deployment_ip }}"
+        ara_server_ip: "{{ host_ip }}"
         config_to_edit: "~/ansible.cfg"
         python_bin_path: "/home/kolla/kolla/bin/"
       when: ara_enable | bool
