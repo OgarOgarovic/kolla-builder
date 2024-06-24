@@ -7,10 +7,12 @@
 
 # kolla_enable_tls_internal: "yes"
 # kolla_enable_tls_external: "yes"
-# kolla_enable_tls_backend: "yes"
+# kolla_enable_tls_backend: "no"
 # kolla_copy_ca_into_containers: "yes"
 openstack_cacert: /etc/pki/tls/certs/ca-bundle.crt
 kolla_dev_mode: "yes"
+# nova_enable_tls_backend: "yes"
+# rabbitmq_enable_tls_backend: "yes"
 # customize_etc_hosts: "no"
 # database_tls_backend_enable: "yes"
 # database_tls_frontend_enable: "yes"
@@ -175,7 +177,10 @@ neutron_external_interface: "enp7s0"
 # if vmware_nsxv3 or vmware_nsxp is selected, enable_openvswitch MUST be set to "no" (default is yes)
 # Do note linuxbridge is *EXPERIMENTAL* in Neutron since Zed and it requires extra tweaks to config to be usable.
 # For details, see: https://docs.openstack.org/neutron/latest/admin/config-experimental-framework.html
-#neutron_plugin_agent: "openvswitch"
+neutron_plugin_agent: "ovn"
+enable_ovn_ipsec: true
+neutron_ovs_generate_certificates: true
+openvswitch_ipsec_image_full: "registry.scs.community/kolla/openvswitch-ipsec:17.1.0"
 
 # Valid options are [ internal, infoblox ]
 #neutron_ipam_driver: "internal"
@@ -271,7 +276,8 @@ enable_haproxy: true
 #####################
 # Backend TLS options
 #####################
-kolla_enable_tls_backend: "yes"
+# kolla_enable_tls_backend: "no"
+# nova_enable_tls_backend: "yes"
 #kolla_verify_tls_backend: "yes"
 #kolla_tls_backend_cert: "{{ kolla_certificates_dir }}/backend-cert.pem"
 #kolla_tls_backend_key: "{{ kolla_certificates_dir }}/backend-key.pem"
