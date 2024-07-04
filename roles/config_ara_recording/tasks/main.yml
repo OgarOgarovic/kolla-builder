@@ -39,9 +39,18 @@
     line: "api_server = http://{{ ara_server_ip }}:{{ ara_server_port }}"
     state: present
 
+- name: Check if python3 exists in the environment
+  command: "{{ (python_bin_path, 'python3') | path_join }} --version"
+  register: python3_check
+  ignore_errors: true
+
+- name: Set python binary name
+  set_fact:
+    python_binary: "{{ 'python3' if python3_check.rc == 0 else 'python' }}"
+
 - name: Construct python module call command
   set_fact:
-    python_command: "{{ (python_bin_path, 'python') | path_join }}"
+    python_command: "{{ (python_bin_path, python_binary) | path_join }}"
   when: python_bin_path is defined and python_bin_path != ""
 
 - name: Get ARA callback plugins definition
