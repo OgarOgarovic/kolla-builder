@@ -51,7 +51,7 @@
 - name: Construct python module call command
   set_fact:
     python_command: "{{ (python_bin_path, python_binary) | path_join }}"
-  when: python_bin_path is defined and python_bin_path != ""
+when: python_bin_path is defined
 
 - name: Get ARA callback plugins definition
   ansible.builtin.shell:
