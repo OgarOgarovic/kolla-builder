@@ -3,4 +3,7 @@ vm_list.yml
 user/*
 kolla-files/user-globals/*
 clouds.yaml
+remote
+ansible.cfg
+ssh_config
 kolla-files/multinode
