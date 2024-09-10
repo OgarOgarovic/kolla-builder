@@ -1,0 +1,33 @@
+---
+- name: Ensure libvirt network XML is present
+  delegate_to: localhost
+  template:
+    src: network.xml.j2
+    dest: /tmp/{{ libvirt_network_name }}.xml
+
+- name: Define the libvirt network
+  community.libvirt.virt_net:
+    name: "{{ libvirt_network_name }}"
+    state: present
+    xml: "{{ lookup('file', '/tmp/' + libvirt_network_name + '.xml') }}"
+  register: network_status
+  ignore_errors: yes
+
+- name: Start the libvirt network
+  community.libvirt.virt_net:
+    name: "{{ libvirt_network_name }}"
+    state: active
+  when: network_status.changed
+
+- name: Set the libvirt network to autostart
+  command: "virsh net-autostart {{ libvirt_network_name }}"
+  when: network_status.changed
+
+- name: Remove the network XML after defining
+  file:
+    path: "/tmp/{{ libvirt_network_name }}.xml"
+    state: absent
+
+- name: Display network creation result
+  debug:
+    msg: "{{ network_status }}"
