@@ -2,6 +2,7 @@
 - name: Wait for hosts to be avialable
   hosts: all
   user: root
+  gather_facts: false
   vars:
     ansible_ssh_common_args: '-o IdentitiesOnly=yes'
   tasks:
