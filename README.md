@@ -19,7 +19,7 @@ Your machine where you run Kolla-Builder ansible playbooks from.
   ```bash
   sudo apt install virt-manager
   ```
-- [Kolla image](https://api.gx-scs.sovereignit.cloud:8080/swift/v1/AUTH_0b3c75f80b6743778daccec0da423465/Kolla%20Builder%20Image/kolla-image.qcow2)
+- [Kolla image](https://api.gx-scs.sovereignit.cloud:8080/swift/v1/AUTH_0b3c75f80b6743778daccec0da423465/Kolla%20Builder%20Image%2020240903/kolla-image.qcow2)
 
 - Ansible
   ```bash
