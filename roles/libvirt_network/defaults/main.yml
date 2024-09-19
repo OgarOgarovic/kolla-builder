@@ -1,0 +1,10 @@
+---
+# defaults file for libvirt_network
+libvirt_network_name: kolla_network
+libvirt_network_bridge: virbr0
+libvirt_network_ip_start: "192.168.100.2"
+libvirt_network_ip_end: "192.168.100.254"
+libvirt_network_ip_gateway: "192.168.100.1"
+libvirt_network_ip_netmask: 255.255.255.0
+libvirt_network_domain: kolla.local
+libvirt_network_auto_dhcp: true

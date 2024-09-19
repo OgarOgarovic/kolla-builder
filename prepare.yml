@@ -73,7 +73,7 @@
     - name: Extract host IP from data
       ansible.builtin.set_fact:
         host_ip: "{{ host_ip_data.stdout_lines[0] }}"
-
+      when: ara_enable | bool
   roles:
     - role: config_ara_recording
       become: true

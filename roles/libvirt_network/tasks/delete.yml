@@ -1,0 +1,11 @@
+---
+- name: Delete the libvirt network
+  community.libvirt.virt_net:
+    name: "{{ libvirt_network_name }}"
+    state: absent
+  register: delete_status
+  ignore_errors: true
+
+- name: Display network deletion result
+  debug:
+    msg: "{{ delete_status }}"

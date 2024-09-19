@@ -3,27 +3,24 @@
 This repository contains a set of Ansible playbooks that will spawn and configure VMs (currently supporting libvirt only) to deploy Kolla.
 
 ## Prerequisites
-
+### Host Machine
+Machine where you run Libvirt instances that will run Kolla Can be the same as [Local Machine](#local-machine) or a remote machine.
 - Libvirt
-  - Including `libvirt-dev`
-  ```bash
+```bash
   sudo apt install qemu qemu-kvm libvirt-dev
-  ```
+```
+- LibXML for python **Important:** install as root
+```bash
+sudo pip install lxml
+```
+### Local Machine
+Your machine where you run Kolla-Builder ansible playbooks from.
 - Virt-manager (optional)
   ```bash
   sudo apt install virt-manager
   ```
 - [Kolla image](https://api.gx-scs.sovereignit.cloud:8080/swift/v1/AUTH_0b3c75f80b6743778daccec0da423465/Kolla%20Builder%20Image%2020240903/kolla-image.qcow2)
-- 3 NAT networks - [Guide](https://gulraezgulshan.medium.com/virtual-networking-in-linux-b1abcb983e72)
-  - **nat1:** `192.168.122.0/24` for SSH and Ansible
-  - **nat2:** `192.168.123.0/24` for OpenStack management network
-  - **nat3:** `192.168.100.0/24` for Neutron networking
-  ```bash
-  virsh net-define libvirt/nat1.xml && virsh net-start nat1
-  virsh net-define libvirt/nat2.xml && virsh net-start nat2
-  virsh net-define libvirt/nat3.xml && virsh net-start nat3
-  ```
-  - You can use libvirt `default` instead of one of the NATs
+
 - Ansible
   ```bash
   pip install ansible
@@ -46,18 +43,11 @@ pip install lxml
 
 - Edit the [example user config](example_config.yml) and options are documented in config examples.
 
-- Edit [kolla-files/globals.yml](kolla-files/globals.yml)
-    - This is the configuration file of Kolla - [Read the Docs](https://docs.openstack.org/kolla-ansible/latest/admin/index.html)
-    - One of the most important options is `kolla_internal_vip_address`, which should be any *NOT USED* address in the **nat2** range, e.g.,
-    ```yaml
-    kolla_internal_vip_address: 192.168.123.200 # The default
-    ```
-
 ## Usage
 
 ### Building Environment
 The `builder` script is used to manage nodes with `ansible-playbook` .
-#### Deploying ARA records ansible server
+#### Deploying ARA records ansible server (optional)
 
 To deploy ARA server and start recording host ansible plays with ARA,
 ensure flag `ara_enable` in `user_config.yml` is set to true and run:

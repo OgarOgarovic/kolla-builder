@@ -3,9 +3,45 @@
   hosts: all
   user: root
 
-  roles:
-    - name: create_aio
+  tasks:
+    - include_role:
+        name: libvirt_network
+      vars:
+
+        libvirt_network_name: "{{ network_ssh }}"
+        libvirt_network_ip_start: "{{ network_ssh_ip_start }}"
+        libvirt_network_ip_end: "{{ network_ssh_ip_end }}"
+        libvirt_network_ip_gateway: "{{ network_ssh_ip_gateway }}"
+        libvirt_network_bridge: "{{ network_ssh_bridge }}"
+        libvirt_network_auto_dhcp: false
+      when: create_networks
+
+    - include_role:
+        name: libvirt_network
+      vars:
+        libvirt_network_name: "{{ network_openstack }}"
+        libvirt_network_ip_start: "{{ network_openstack_ip_start }}"
+        libvirt_network_ip_end: "{{ network_openstack_ip_end }}"
+        libvirt_network_ip_gateway: "{{ network_openstack_ip_gateway }}"
+        libvirt_network_ip_prefix: "{{ network_openstack_prefix }}"
+        libvirt_network_bridge: "{{ network_openstack_bridge }}"
+      when: create_networks
+
+    - include_role:
+        name: libvirt_network
+      vars:
+        libvirt_network_name: "{{ network_neutron }}"
+        libvirt_network_ip_start: "{{ network_neutron_ip_start }}"
+        libvirt_network_ip_end: "{{ network_neutron_ip_end }}"
+        libvirt_network_ip_gateway: "{{ network_neutron_ip_gateway }}"
+        libvirt_network_ip_prefix: "{{ network_neutron_prefix }}"
+        libvirt_network_bridge: "{{ network_neutron_bridge }}"
+      when: create_networks
+
+    - include_role:
+        name: create_aio
       when: is_aio
 
-    - name: create_multinode
+    - include_role:
+        name: create_multinode
       when: not is_aio

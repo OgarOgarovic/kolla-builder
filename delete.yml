@@ -4,5 +4,16 @@
   user: root
   ignore_errors: true
 
-  roles:
-    - delete_nodes
+  tasks:
+  - include_role:
+      name: delete_nodes
+  - include_role:
+      name: libvirt_network
+      tasks_from: delete.yml
+    vars:
+      libvirt_network_name: "{{ item  }}"
+    with_items:
+    - "{{ network_ssh }}"
+    - "{{ network_openstack }}"
+    - "{{ network_neutron }}"
+    when: create_networks

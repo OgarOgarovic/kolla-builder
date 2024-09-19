@@ -13,9 +13,9 @@ remote_username: ubuntu
 ram_size: 10000
 cpu_count: 12
 disk_size: 50
-network_ssh: "nat1"
-network_openstack: "nat2"
-network_neutron: "nat3"
+network_ssh: "kolla_ssh"
+network_openstack: "kolla_openstack"
+network_neutron: "kolla_neutron"
 is_aio: true
 mac_addresses: {}
 vms_to_delete:
@@ -32,7 +32,7 @@ ansible_args: >-
 
 node_vg: ubuntu-vg
 node_lv: ubuntu-lv
-globals_file: globals.yml
+globals_file: null
 kolla_source_local_path: "../kolla-ansible"
 kolla_source_node_path: "/home/kolla/kolla-ansible"
 additional_upload_node_path: "/home/kolla"
@@ -42,4 +42,27 @@ git_branch: master
 git_patches: []
 additional_uploads: []
 additional_uploads_deploy_node: []
-ara_enable: true
+ara_enable: false
+
+network_ssh_ip: "192.168.122.0"
+network_openstack_ip: "192.168.123.0"
+network_neutron_ip: "192.168.124.0"
+
+network_ssh_ip_start: '{{ network_ssh_ip.split(".")[:-1] | join(".") + ".2" }}'
+network_ssh_ip_end: '{{ network_ssh_ip.split(".")[:-1] | join(".") + ".254" }}'
+network_ssh_ip_gateway: '{{ network_ssh_ip.split(".")[:-1] | join(".") + ".254" }}'
+
+network_openstack_ip_start: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".2" }}'
+network_openstack_ip_end: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".254" }}'
+network_openstack_ip_gateway: '{{ network_openstack_ip.split(".")[:-1] | join(".") + ".254" }}'
+
+network_neutron_ip_start: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".2" }}'
+network_neutron_ip_end: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".254" }}'
+network_neutron_ip_gateway: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".254" }}'
+
+
+network_ssh_bridge: virbr0
+network_openstack_bridge: virbr2
+network_neutron_bridge: virbr3
+
+create_networks: false

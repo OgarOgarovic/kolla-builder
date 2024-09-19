@@ -1,9 +1,9 @@
-#####################################
-# EXAMPLE FILE FOR ALL IN ONE KOLLA #
-#####################################
+#################
+# EXAMPLE FILE  #
+#################
 
 ###############################################################
-#  !!!WARNING!!!: DO NOT USE WITGUT EDITING FIRST             #
+#  !!!WARNING!!!: DO NOT USE WITHOUT EDITING FIRST             #
 #  It's recommended to copy this config to user/ subdirectory #
 ###############################################################
 
@@ -30,16 +30,51 @@ proxy_server_private_key: "{{ lookup('ansible.builtin.env', 'HOME') }}/.ssh/id_r
 
 
 ## NETWORK
-# 192.168.122.0/24
-# could also be the "default" network that libvirt created
-network_ssh: "nat1"
 
-# 192.168.123.0/24
-network_openstack: "nat2"
 
-# 192.168.100.0/24
-network_neutron: "nat3"
+# Name for libvirt ssh network. Must be unique, no network with such name should be defined
+network_ssh: "kolla-ssh"
 
+# Bridge for ssh network. The bridge must not be in use
+network_ssh_bridge: virbr1
+
+# Ip of the ssh network. All IP configuration is generated from this
+network_ssh_ip: "192.168.100.0"
+
+# If you want to configure IP adresses manually (not reccomended)
+# # Start of the SSH netwotk ip range
+# network_ssh_ip_start: 192.168.100.2
+# # End of the SSH netwotk ip range
+# network_ssh_ip_end: 192.168.100.254
+# # Gateway (host machine) of the SSH network
+# network_ssh_ip_gateway: 192.168.100.1
+# # SSH network CIDR
+# network_ssh_ip_range: 192.168.100.0/24
+
+# Name for libvirt Openstack network. Must be unique, no network with such name should be defined
+network_openstack: "kolla-openstack"
+
+# Bridge for Openstack network. The bridge must not be in use
+network_openstack_bridge: virbr2
+
+# Ip of the Openstack network. All IP configuration is generated from this
+network_openstack_ip: "192.168.123.0"
+
+# If you want to configure IP adresses manually, do it according to network_ssh examples replacing prefix with network_openstack
+
+# Name for libvirt Neutron network. Must be unique, no network with such name should be defined
+network_neutron: "kolla-neutron"
+
+# Bridge for Openstack network. The bridge must not be in use
+network_neutron_bridge: virbr3
+
+# Ip of the ssh network. All IP configuration is generated from this
+network_neutron_ip: "192.168.124.0"
+
+# If you want to configure IP adresses manually, do it according to network_ssh examples replacing prefix with network_neutron
+
+# Whether create networks, disable this if you already have 3 networks, e.g. from previous versions of Kolla Builder
+create_networks: true
 
 ## GIT PATCH
 # Kolla builder can rebase git branches
@@ -68,10 +103,16 @@ ssh_config: "ssh_config"
 
 
 ## KOLLA CONFIGURATION
+# The VIP address of Kolla ansible, templates the kolla-ansible variable of the same name
+# Must be an unused IP of network_openstack_ip subnet
+kolla_internal_vip_address: "192.168.123.200"
+
 # globals file (located in kolla-files) subdirectory
 # this is usefull if you have several deployment scenarios
 # i.e. you develop on multiple branches at once
-globals_file: globals.yml
+# This config overrides globals.yml, but does not override kolla_internal_vip_address, which
+# is configured separately
+# globals_file: user_globals/globals.yml
 
 # Path to kolla-ansible source code
 kolla_source_local_path: "./kolla-ansible"

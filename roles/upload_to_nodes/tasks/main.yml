@@ -1,13 +1,38 @@
 ---
 # tasks file for upload
-- name: Copy globals to deploy node
+- name: Copy default globals to deploy node
   copy:
-    src: kolla-files/{{ globals_file }}
+    src: globals.yml
     dest: /etc/kolla/globals.yml
     owner: kolla
     group: kolla
     mode: '0644'
 
+- name: Ensure globals.d directory exists on deploy node
+  file:
+    path: /etc/kolla/globals.d
+    state: directory
+    owner: kolla
+    group: kolla
+    mode: '0755'
+
+- name: Template file with propper VIP address on deploy node
+  template:
+    src: 99-vip-address.yml.j2
+    dest: /etc/kolla/globals.d/99-vip-address.yml
+    owner: kolla
+    group: kolla
+    mode: '0644'
+
+- name: Copy user globals file to deploy node
+  copy:
+    src: "kolla-files/{{ globals_file }}"
+    dest: /etc/kolla/globals.d/00-user-config.yml
+    owner: kolla
+    group: kolla
+    mode: '0644'
+
+  when: globals_file != None
 - name: Copy all-in-one to deploy node
   copy:
     src: kolla-files/all-in-one
