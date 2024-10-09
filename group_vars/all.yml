@@ -29,7 +29,9 @@ ansible_args: >-
   ansible_become=True
   ansible_private_key_file={{ kolla_ssh_key }}
   ansible_python_interpreter={{ kolla_python_interpereter }}
-
+inventory_name: "kolla-inventory"
+multinode_file_path: "{{ inventory_name }}"
+aio_filepath:  "{{ inventory_name }}"
 node_vg: ubuntu-vg
 node_lv: ubuntu-lv
 globals_file: null

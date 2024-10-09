@@ -1,0 +1,10 @@
+# BEGIN OVN-BGP
+Host ovn-bgp
+    User kolla
+    Hostname 192.168.124.1
+    CheckHostIP no
+    StrictHostKeyChecking no
+    ServerAliveInterval 30
+    IdentityFile "/home/matus/.ssh/id_kolla"
+    IdentitiesOnly yes
+# END OVN-BGP
