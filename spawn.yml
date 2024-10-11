@@ -25,6 +25,7 @@
         libvirt_network_ip_gateway: "{{ network_openstack_ip_gateway }}"
         libvirt_network_ip_prefix: "{{ network_openstack_prefix }}"
         libvirt_network_bridge: "{{ network_openstack_bridge }}"
+        libvirt_network_type: "route"
       when: create_networks
 
     - include_role:
@@ -36,6 +37,8 @@
         libvirt_network_ip_gateway: "{{ network_neutron_ip_gateway }}"
         libvirt_network_ip_prefix: "{{ network_neutron_prefix }}"
         libvirt_network_bridge: "{{ network_neutron_bridge }}"
+        libvirt_network_auto_dhcp: false
+        libvirt_network_type: "route"
       when: create_networks
 
     - include_role:
