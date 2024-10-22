@@ -62,9 +62,23 @@ network_neutron_ip_start: '{{ network_neutron_ip.split(".")[:-1] | join(".") + "
 network_neutron_ip_end: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".254" }}'
 network_neutron_ip_gateway: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".1" }}'
 
+external_network_cidr: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".0" }}/24'
+external_network_dhcp_start: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".150" }}'
+external_network_dhcp_end: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".199" }}'
+external_network_gateway: '{{ network_neutron_ip_gateway }}'
+external_network_type: "flat"
+external_network_vlan_id: 123
 
 network_ssh_bridge: virbr0
 network_openstack_bridge: virbr2
 network_neutron_bridge: virbr3
 
 create_networks: false
+create_network_ssh: "{{ create_networks }}"
+create_network_openstack: "{{ create_networks }}"
+create_network_neutron: "{{ create_networks }}"
+
+destroy_networks: false
+destroy_network_ssh: "{{ destroy_networks }}"
+destroy_network_openstack: "{{ destroy_networks }}"
+destroy_network_neutron: "{{ destroy_networks }}"
