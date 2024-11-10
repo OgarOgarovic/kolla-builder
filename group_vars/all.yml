@@ -31,7 +31,7 @@ ansible_args: >-
   ansible_python_interpreter={{ kolla_python_interpereter }}
 inventory_name: "kolla-inventory"
 multinode_file_path: "{{ inventory_name }}"
-aio_filepath:  "{{ inventory_name }}"
+aio_filepath: "{{ inventory_name }}"
 node_vg: ubuntu-vg
 node_lv: ubuntu-lv
 globals_file: null
@@ -66,7 +66,7 @@ external_network_cidr: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".0"
 external_network_dhcp_start: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".150" }}'
 external_network_dhcp_end: '{{ network_neutron_ip.split(".")[:-1] | join(".") + ".199" }}'
 external_network_gateway: '{{ network_neutron_ip_gateway }}'
-external_network_type: "flat"
+external_network_type: "vlan"
 external_network_vlan_id: 123
 
 network_ssh_bridge: virbr0

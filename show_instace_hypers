@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for server in $(openstack server list -f value -c ID); do
+  echo "$(openstack server show $server -f value -c name -c OS-EXT-SRV-ATTR:hypervisor_hostname)"
+done

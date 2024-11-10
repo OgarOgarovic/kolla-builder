@@ -1,8 +1,8 @@
 ---
-- name: Install ARA
-  pip:
-    name: "ara"
-
+# - name: Install ARA
+#   pip:
+#     name: "ara"
+#
 - name: Ensure ansible.cfg exists
   ansible.builtin.template:
     src: ansible.cfg.j2

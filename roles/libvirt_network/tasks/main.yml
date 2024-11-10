@@ -20,7 +20,7 @@
   when: network_status.changed
 
 - name: Set the libvirt network to autostart
-  command: "virsh net-autostart {{ libvirt_network_name }}"
+  command: "sudo virsh net-autostart {{ libvirt_network_name }}"
   when: network_status.changed
 
 - name: Remove the network XML after defining
